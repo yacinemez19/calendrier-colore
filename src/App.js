@@ -1,23 +1,167 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { MONTHS } from './utils/dateHelpers';
+import { usePeriods } from './hooks/usePeriods';
+import Calendar from './components/Calendar';
+import PeriodModal from './components/PeriodModal';
+import PeriodList from './components/PeriodList';
+import PeriodInspector from './components/PeriodInspector';
 
 function App() {
+  const [selectedMonth, setSelectedMonth] = useState(9); // September by default
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dateRange, setDateRange] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(true);
+
+  const {
+    periods,
+    selectedPeriodId,
+    createPeriod,
+    updatePeriod,
+    deletePeriod,
+    getPeriodsForDate,
+    getSelectedPeriod,
+    selectPeriod,
+    clearSelection
+  } = usePeriods();
+
+  const availableMonths = Object.keys(MONTHS).map(Number);
+
+  const handleDateRangeSelect = (range) => {
+    setDateRange(range);
+    setIsModalOpen(true);
+  };
+
+  const handleCreatePeriod = (periodData) => {
+    createPeriod(periodData);
+    setIsModalOpen(false);
+    setSelectedDays([]);
+    setDateRange(null);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDays([]);
+    setDateRange(null);
+  };
+
+  const handleSelectPeriod = (periodId) => {
+    selectPeriod(periodId);
+  };
+
+  const handleUpdatePeriod = (periodId, updates) => {
+    updatePeriod(periodId, updates);
+  };
+
+  const handleDeletePeriod = (periodId) => {
+    deletePeriod(periodId);
+  };
+
+  const selectedPeriod = getSelectedPeriod();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-semibold text-gray-900">
+                Agenda Coloré
+              </h1>
+            </div>
+            
+            {/* Month Navigation */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500 mr-3">Mois :</span>
+              {availableMonths.map(month => (
+                <button
+                  key={month}
+                  onClick={() => setSelectedMonth(month)}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    selectedMonth === month
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {MONTHS[month].name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-12 gap-6 h-[calc(100vh-180px)]">
+          {/* Left Panel - Inspector */}
+          <div className="col-span-3">
+            <PeriodInspector
+              selectedPeriod={selectedPeriod}
+              onUpdatePeriod={handleUpdatePeriod}
+              onClearSelection={clearSelection}
+            />
+          </div>
+
+          {/* Center Panel - Calendar */}
+          <div className="col-span-6">
+            <Calendar
+              selectedMonth={selectedMonth}
+              periods={periods}
+              getPeriodsForDate={getPeriodsForDate}
+              onDateRangeSelect={handleDateRangeSelect}
+              selectedDays={selectedDays}
+              setSelectedDays={setSelectedDays}
+            />
+          </div>
+
+          {/* Right Panel - Period List */}
+          <div className="col-span-3">
+            <PeriodList
+              periods={periods}
+              onSelectPeriod={handleSelectPeriod}
+              selectedPeriodId={selectedPeriodId}
+              onDeletePeriod={handleDeletePeriod}
+            />
+          </div>
+        </div>
+      </main>
+
+      {/* Period Creation Modal */}
+      <PeriodModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleCreatePeriod}
+        dateRange={dateRange}
+      />
+
+      {/* Instructions overlay for first-time users */}
+      {showInstructions && periods.length === 0 && !isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-40 pointer-events-none">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4 pointer-events-auto">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Bienvenue dans votre agenda coloré !
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Pour commencer, cliquez et faites glisser sur le calendrier pour sélectionner une période, puis créez votre première période colorée.
+              </p>
+              <button
+                onClick={() => setShowInstructions(false)}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              >
+                Compris !
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

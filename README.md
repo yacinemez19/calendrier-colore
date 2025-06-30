@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Agenda Coloré
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Une application web moderne de gestion d'agenda pour la visualisation et la gestion de périodes colorées sur un calendrier.
 
-## Available Scripts
+## 🎯 Fonctionnalités
 
-In the project directory, you can run:
+- **Calendrier interactif** : Navigation entre septembre, octobre, novembre et décembre 2025
+- **Sélection de périodes** : Cliquer-glisser pour sélectionner des plages de dates
+- **Périodes colorées** : Créer des périodes avec nom, description et couleur personnalisée
+- **Gestionnaire de périodes** : Visualiser, modifier et supprimer les périodes créées
+- **Inspecteur détaillé** : Édition en direct des propriétés des périodes
+- **Persistance locale** : Sauvegarde automatique dans localStorage
 
-### `npm start`
+## 🚀 Démarrage rapide
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prérequis
+- Node.js (version 14 ou supérieure)
+- npm ou yarn
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
 
-### `npm test`
+```bash
+# Cloner le repository
+git clone <repository-url>
+cd agenda-colore
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Installer les dépendances
+npm install
 
-### `npm run build`
+# Démarrer l'application
+npm start
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+L'application sera accessible à l'adresse : `http://localhost:3000`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📱 Utilisation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Navigation** : Utilisez les boutons en haut de la page pour naviguer entre les mois
+2. **Créer une période** :
+   - Cliquez et faites glisser sur le calendrier pour sélectionner des jours
+   - Une modale s'ouvre pour définir le nom, la description et la couleur
+   - Validez pour créer la période
+3. **Visualiser les périodes** : Les périodes apparaissent colorées sur le calendrier et listées à droite
+4. **Modifier une période** : Cliquez sur une période dans la liste, puis utilisez l'inspecteur à gauche
+5. **Supprimer une période** : Cliquez sur l'icône de suppression dans la liste
 
-### `npm run eject`
+## 🏗️ Architecture
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+src/
+├── components/          # Composants React
+│   ├── Calendar.jsx    # Calendrier principal avec sélection
+│   ├── PeriodModal.jsx # Modale de création/édition
+│   ├── PeriodList.jsx  # Liste des périodes
+│   └── PeriodInspector.jsx # Inspecteur de période
+├── hooks/              # Hooks personnalisés
+│   └── usePeriods.js   # Gestion des périodes avec localStorage
+├── utils/              # Utilitaires
+│   └── dateHelpers.js  # Fonctions de manipulation de dates
+└── App.js             # Composant principal
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🎨 Technologies utilisées
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **React 19** : Framework principal
+- **Tailwind CSS 4** : Styles et design system
+- **JavaScript ES6+** : Logique applicative
+- **localStorage** : Persistance des données
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📋 Structure des données
 
-## Learn More
+Les périodes sont stockées avec la structure suivante :
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javascript
+{
+  id: 'uuid',
+  nom: 'Vacances de la Toussaint',
+  description: 'Vacances scolaires de la Toussaint',
+  couleur: '#FFB347',
+  dateDebut: '2025-10-19',
+  dateFin: '2025-11-04',
+  jours: ['2025-10-19', '2025-10-20', ..., '2025-11-04']
+}
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🔧 Scripts disponibles
 
-### Code Splitting
+- `npm start` : Démarre le serveur de développement
+- `npm test` : Lance les tests
+- `npm run build` : Génère la version de production
+- `npm run eject` : Éjecte la configuration (non recommandé)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🎯 Roadmap
 
-### Analyzing the Bundle Size
+- [x] Calendrier de base avec navigation
+- [x] Sélection de périodes par cliquer-glisser
+- [x] Création de périodes colorées
+- [x] Liste et gestion des périodes
+- [x] Inspecteur pour l'édition
+- [x] Persistance localStorage
+- [ ] Export/import des données
+- [ ] Thèmes de couleurs
+- [ ] Mode responsive mobile
+- [ ] Notifications et rappels
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🤝 Contribution
 
-### Making a Progressive Web App
+Les contributions sont les bienvenues ! N'hésitez pas à :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
 
-### Advanced Configuration
+## 📄 Licence
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-### Deployment
+## 📞 Support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Pour toute question ou suggestion :
+- Créez une issue sur GitHub
+- Contactez l'équipe de développement
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Fait avec ❤️ pour une meilleure organisation du temps
