@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { formatDateRange } from '../utils/dateHelpers';
 
-const PeriodList = ({ periods, onSelectPeriod, selectedPeriodId, onDeletePeriod }) => {
+const PeriodList = ({ periods, onSelectPeriod, selectedPeriodId, onDeletePeriod, selectedAgendaId, agendaName }) => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const handleDelete = (periodId) => {
@@ -27,15 +27,29 @@ const PeriodList = ({ periods, onSelectPeriod, selectedPeriodId, onDeletePeriod 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 h-full">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Périodes créées
-        </h3>
-        <span className="text-sm text-gray-500">
-          {periods.length} période{periods.length !== 1 ? 's' : ''}
-        </span>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Périodes{agendaName ? ` - ${agendaName}` : ''}
+          </h3>
+          {selectedAgendaId && (
+            <span className="text-sm text-gray-500">
+              {periods.length} période{periods.length !== 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
       </div>
 
-      {periods.length === 0 ? (
+      {!selectedAgendaId ? (
+        <div className="text-center py-8">
+          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5l7-7 7 7M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <h4 className="mt-2 text-sm font-medium text-gray-900">Aucun agenda sélectionné</h4>
+          <p className="mt-1 text-sm text-gray-500">
+            Sélectionnez ou créez un agenda pour voir ses périodes.
+          </p>
+        </div>
+      ) : periods.length === 0 ? (
         <div className="text-center py-8">
           <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8M8 21l4-4 4 4M8 21l4-4 4 4" />
@@ -46,7 +60,7 @@ const PeriodList = ({ periods, onSelectPeriod, selectedPeriodId, onDeletePeriod 
           </p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className="space-y-3 max-h-[calc(100vh-250px)] overflow-y-auto flex-1">
           {periods.map((period) => (
             <div
               key={period.id}

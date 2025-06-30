@@ -1,30 +1,48 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where } from 'firebase/firestore';
 import { getDateRange, generateId } from '../utils/dateHelpers';
 
 /**
  * Custom hook for managing periods with Firebase persistence
+ * @param {string|null} selectedAgendaId - The currently selected agenda ID
  */
-export const usePeriods = () => {
+export const usePeriods = (selectedAgendaId) => {
   const [periods, setPeriods] = useState([]);
   const [selectedPeriodId, setSelectedPeriodId] = useState(null);
 
-  // Charger en temps réel
+  // Charger en temps réel les périodes de l'agenda sélectionné
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'periods'), (snapshot) => {
+    if (!selectedAgendaId) {
+      setPeriods([]);
+      setSelectedPeriodId(null);
+      return;
+    }
+
+    const periodsQuery = query(
+      collection(db, 'periods'), 
+      where('agendaId', '==', selectedAgendaId)
+    );
+    
+    const unsub = onSnapshot(periodsQuery, (snapshot) => {
       setPeriods(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
+    
     return () => unsub();
-  }, []);
+  }, [selectedAgendaId]);
 
   /**
    * Create a new period
    * @param {Object} periodData - Period data {nom, description, couleur, dateDebut, dateFin}
    */
   const createPeriod = async (periodData) => {
+    if (!selectedAgendaId) {
+      throw new Error('Aucun agenda sélectionné');
+    }
+    
     const newPeriod = {
       ...periodData,
+      agendaId: selectedAgendaId,
       jours: getDateRange(periodData.dateDebut, periodData.dateFin)
     };
     await addDoc(collection(db, 'periods'), newPeriod);

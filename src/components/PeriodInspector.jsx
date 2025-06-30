@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { formatDateRange } from '../utils/dateHelpers';
 
-const PeriodInspector = ({ selectedPeriod, onUpdatePeriod, onClearSelection }) => {
+const PeriodInspector = ({ selectedPeriod, onUpdatePeriod, onClearSelection, selectedAgendaId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     nom: '',
@@ -116,6 +116,28 @@ const PeriodInspector = ({ selectedPeriod, onUpdatePeriod, onClearSelection }) =
     setErrors({});
     setIsEditing(false);
   };
+
+  if (!selectedAgendaId) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 h-full">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Inspecteur
+          </h3>
+        </div>
+        
+        <div className="text-center py-8">
+          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5l7-7 7 7M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <h4 className="mt-2 text-sm font-medium text-gray-900">Aucun agenda sélectionné</h4>
+          <p className="mt-1 text-sm text-gray-500">
+            Sélectionnez un agenda pour voir ses périodes.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!selectedPeriod) {
     return (

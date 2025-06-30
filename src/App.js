@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { MONTHS } from './utils/dateHelpers';
 import { usePeriods } from './hooks/usePeriods';
+import { useAgendas } from './hooks/useAgendas';
 import Calendar from './components/Calendar';
 import PeriodModal from './components/PeriodModal';
 import PeriodList from './components/PeriodList';
 import PeriodInspector from './components/PeriodInspector';
+import AgendaSelector from './components/AgendaSelector';
 
 function App() {
   const [selectedMonth, setSelectedMonth] = useState(9); // September by default
@@ -13,6 +15,19 @@ function App() {
   const [dateRange, setDateRange] = useState(null);
   const [showInstructions, setShowInstructions] = useState(true);
 
+  // Gestion des agendas
+  const {
+    agendas,
+    selectedAgendaId,
+    selectedAgenda,
+    createAgenda,
+    updateAgenda,
+    deleteAgenda,
+    duplicateAgenda,
+    selectAgenda
+  } = useAgendas();
+
+  // Gestion des périodes pour l'agenda sélectionné
   const {
     periods,
     selectedPeriodId,
@@ -23,20 +38,29 @@ function App() {
     getSelectedPeriod,
     selectPeriod,
     clearSelection
-  } = usePeriods();
+  } = usePeriods(selectedAgendaId);
 
   const availableMonths = Object.keys(MONTHS).map(Number);
 
   const handleDateRangeSelect = (range) => {
+    if (!selectedAgendaId) {
+      alert('Veuillez d\'abord sélectionner ou créer un agenda');
+      return;
+    }
     setDateRange(range);
     setIsModalOpen(true);
   };
 
-  const handleCreatePeriod = (periodData) => {
-    createPeriod(periodData);
-    setIsModalOpen(false);
-    setSelectedDays([]);
-    setDateRange(null);
+  const handleCreatePeriod = async (periodData) => {
+    try {
+      await createPeriod(periodData);
+      setIsModalOpen(false);
+      setSelectedDays([]);
+      setDateRange(null);
+    } catch (error) {
+      console.error('Erreur lors de la création de la période:', error);
+      alert('Erreur lors de la création de la période');
+    }
   };
 
   const handleCloseModal = () => {
@@ -49,12 +73,20 @@ function App() {
     selectPeriod(periodId);
   };
 
-  const handleUpdatePeriod = (periodId, updates) => {
-    updatePeriod(periodId, updates);
+  const handleUpdatePeriod = async (periodId, updates) => {
+    try {
+      await updatePeriod(periodId, updates);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la période:', error);
+    }
   };
 
-  const handleDeletePeriod = (periodId) => {
-    deletePeriod(periodId);
+  const handleDeletePeriod = async (periodId) => {
+    try {
+      await deletePeriod(periodId);
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la période:', error);
+    }
   };
 
   const selectedPeriod = getSelectedPeriod();
@@ -71,6 +103,18 @@ function App() {
               </h1>
             </div>
             
+            {/* Agenda Selector */}
+            <div className="flex items-center">
+              <AgendaSelector
+                agendas={agendas}
+                selectedAgendaId={selectedAgendaId}
+                onSelectAgenda={selectAgenda}
+                onCreateAgenda={createAgenda}
+                onDeleteAgenda={deleteAgenda}
+                onDuplicateAgenda={duplicateAgenda}
+              />
+            </div>
+
             {/* Month Navigation */}
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-500 mr-3">Mois :</span>
@@ -101,6 +145,7 @@ function App() {
               selectedPeriod={selectedPeriod}
               onUpdatePeriod={handleUpdatePeriod}
               onClearSelection={clearSelection}
+              selectedAgendaId={selectedAgendaId}
             />
           </div>
 
@@ -123,6 +168,8 @@ function App() {
               onSelectPeriod={handleSelectPeriod}
               selectedPeriodId={selectedPeriodId}
               onDeletePeriod={handleDeletePeriod}
+              selectedAgendaId={selectedAgendaId}
+              agendaName={selectedAgenda?.nom}
             />
           </div>
         </div>
@@ -137,7 +184,7 @@ function App() {
       />
 
       {/* Instructions overlay for first-time users */}
-      {showInstructions && periods.length === 0 && !isModalOpen && (
+      {showInstructions && agendas.length === 0 && !isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-40 pointer-events-none">
           <div className="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4 pointer-events-auto">
             <div className="text-center">
@@ -150,7 +197,7 @@ function App() {
                 Bienvenue dans votre agenda coloré !
               </h3>
               <p className="text-sm text-gray-500 mb-4">
-                Pour commencer, cliquez et faites glisser sur le calendrier pour sélectionner une période, puis créez votre première période colorée.
+                Pour commencer, créez votre premier agenda en haut de la page, puis sélectionnez des dates sur le calendrier pour créer vos premières périodes colorées.
               </p>
               <button
                 onClick={() => setShowInstructions(false)}
