@@ -82,12 +82,6 @@ Les contributions sont les bienvenues ! N'hésitez pas à :
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## 📞 Support
-
-Pour toute question ou suggestion :
-- Créez une issue sur GitHub
-- Contactez l'équipe de développement
-
 ---
 
 Fait avec ❤️ pour une meilleure organisation du temps
