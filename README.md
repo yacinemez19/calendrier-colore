@@ -9,29 +9,7 @@ Une application web moderne de gestion d'agenda pour la visualisation et la gest
 - **Périodes colorées** : Créer des périodes avec nom, description et couleur personnalisée
 - **Gestionnaire de périodes** : Visualiser, modifier et supprimer les périodes créées
 - **Inspecteur détaillé** : Édition en direct des propriétés des périodes
-- **Persistance locale** : Sauvegarde automatique dans localStorage
-
-## 🚀 Démarrage rapide
-
-### Prérequis
-- Node.js (version 14 ou supérieure)
-- npm ou yarn
-
-### Installation
-
-```bash
-# Cloner le repository
-git clone <repository-url>
-cd agenda-colore
-
-# Installer les dépendances
-npm install
-
-# Démarrer l'application
-npm start
-```
-
-L'application sera accessible à l'adresse : `http://localhost:3000`
+- **Persistance sur internet** : Sauvegarde automatique dans Firebase
 
 ## 📱 Utilisation
 
@@ -65,7 +43,7 @@ src/
 - **React 19** : Framework principal
 - **Tailwind CSS 4** : Styles et design system
 - **JavaScript ES6+** : Logique applicative
-- **localStorage** : Persistance des données
+- **Firebase** : Persistance des données
 
 ## 📋 Structure des données
 
@@ -89,19 +67,6 @@ Les périodes sont stockées avec la structure suivante :
 - `npm test` : Lance les tests
 - `npm run build` : Génère la version de production
 - `npm run eject` : Éjecte la configuration (non recommandé)
-
-## 🎯 Roadmap
-
-- [x] Calendrier de base avec navigation
-- [x] Sélection de périodes par cliquer-glisser
-- [x] Création de périodes colorées
-- [x] Liste et gestion des périodes
-- [x] Inspecteur pour l'édition
-- [x] Persistance localStorage
-- [ ] Export/import des données
-- [ ] Thèmes de couleurs
-- [ ] Mode responsive mobile
-- [ ] Notifications et rappels
 
 ## 🤝 Contribution
 
