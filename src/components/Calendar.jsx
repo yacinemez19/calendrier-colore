@@ -36,19 +36,21 @@ const Calendar = ({
     if (currentDate >= startDate) {
       // Forward selection
       const range = [];
-      const current = new Date(startDate);
-      while (current <= currentDate) {
-        range.push(current.toISOString().split('T')[0]);
-        current.setDate(current.getDate() + 1);
+      let temp = new Date(startDate);
+      while (temp <= currentDate) {
+        range.push(temp.toISOString().split('T')[0]);
+        temp = new Date(temp); // clone
+        temp.setDate(temp.getDate() + 1);
       }
       setSelectedDays(range);
     } else {
       // Backward selection
       const range = [];
-      const current = new Date(currentDate);
-      while (current <= startDate) {
-        range.push(current.toISOString().split('T')[0]);
-        current.setDate(current.getDate() + 1);
+      let temp = new Date(currentDate);
+      while (temp <= startDate) {
+        range.push(temp.toISOString().split('T')[0]);
+        temp = new Date(temp); // clone
+        temp.setDate(temp.getDate() + 1);
       }
       setSelectedDays(range);
     }
