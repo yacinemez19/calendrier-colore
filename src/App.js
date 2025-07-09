@@ -40,7 +40,21 @@ function App() {
     clearSelection
   } = usePeriods(selectedAgendaId);
 
-  const availableMonths = Object.keys(MONTHS).map(Number);
+  // Affichage des mois dans l'ordre voulu : septembre à décembre, puis janvier à mai
+  const availableMonths = [9, 10, 11, 12, 1, 2, 3, 4, 5].filter(m => MONTHS[m]);
+
+  // Carrousel pour les mois
+  const MONTHS_VISIBLE = 4;
+  const [monthCarouselIndex, setMonthCarouselIndex] = useState(0);
+  const maxCarouselIndex = Math.max(0, availableMonths.length - MONTHS_VISIBLE);
+  const visibleMonths = availableMonths.slice(monthCarouselIndex, monthCarouselIndex + MONTHS_VISIBLE);
+
+  const handlePrevMonths = () => {
+    setMonthCarouselIndex(i => Math.max(0, i - 1));
+  };
+  const handleNextMonths = () => {
+    setMonthCarouselIndex(i => Math.min(maxCarouselIndex, i + 1));
+  };
 
   const handleDateRangeSelect = (range) => {
     if (!selectedAgendaId) {
@@ -91,6 +105,19 @@ function App() {
 
   const selectedPeriod = getSelectedPeriod();
 
+  // Fonctions pour navigation mois via le titre du calendrier
+  const currentMonthIndex = availableMonths.indexOf(selectedMonth);
+  const handlePrevMonth = () => {
+    if (currentMonthIndex > 0) {
+      setSelectedMonth(availableMonths[currentMonthIndex - 1]);
+    }
+  };
+  const handleNextMonth = () => {
+    if (currentMonthIndex < availableMonths.length - 1) {
+      setSelectedMonth(availableMonths[currentMonthIndex + 1]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -118,11 +145,19 @@ function App() {
             {/* Month Navigation */}
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-500 mr-3">Mois :</span>
-              {availableMonths.map(month => (
+              <button
+                onClick={handlePrevMonths}
+                disabled={monthCarouselIndex === 0}
+                className={`px-2 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors ${monthCarouselIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                aria-label="Mois précédents"
+              >
+                &#8592;
+              </button>
+              {visibleMonths.map(month => (
                 <button
                   key={month}
                   onClick={() => setSelectedMonth(month)}
-                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  className={`w-24 px-3 py-1 text-sm font-medium rounded-md transition-colors text-ellipsis overflow-hidden whitespace-nowrap ${
                     selectedMonth === month
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -131,6 +166,14 @@ function App() {
                   {MONTHS[month].name}
                 </button>
               ))}
+              <button
+                onClick={handleNextMonths}
+                disabled={monthCarouselIndex === maxCarouselIndex}
+                className={`px-2 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors ${monthCarouselIndex === maxCarouselIndex ? 'opacity-50 cursor-not-allowed' : ''}`}
+                aria-label="Mois suivants"
+              >
+                &#8594;
+              </button>
             </div>
           </div>
         </div>
@@ -158,6 +201,8 @@ function App() {
               onDateRangeSelect={handleDateRangeSelect}
               selectedDays={selectedDays}
               setSelectedDays={setSelectedDays}
+              onPrevMonth={currentMonthIndex > 0 ? handlePrevMonth : undefined}
+              onNextMonth={currentMonthIndex < availableMonths.length - 1 ? handleNextMonth : undefined}
             />
           </div>
 

@@ -7,7 +7,9 @@ const Calendar = ({
   getPeriodsForDate, 
   onDateRangeSelect,
   selectedDays,
-  setSelectedDays 
+  setSelectedDays,
+  onPrevMonth,
+  onNextMonth
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(null);
@@ -121,9 +123,27 @@ const Calendar = ({
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        {monthData.name} {monthData.year}
-      </h2>
+      <div className="relative flex items-center justify-center mb-6">
+        <button
+          onClick={onPrevMonth}
+          disabled={!onPrevMonth}
+          className={`absolute left-0 px-10 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors ${!onPrevMonth ? 'opacity-50 cursor-not-allowed' : ''}`}
+          aria-label="Mois précédent"
+        >
+          &#8592;
+        </button>
+        <h2 className="text-2xl font-bold text-gray-800 text-center min-w-[120px]">
+          {monthData.name} {monthData.year}
+        </h2>
+        <button
+          onClick={onNextMonth}
+          disabled={!onNextMonth}
+          className={`absolute right-0 px-10 py-1 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-colors ${!onNextMonth ? 'opacity-50 cursor-not-allowed' : ''}`}
+          aria-label="Mois suivant"
+        >
+          &#8594;
+        </button>
+      </div>
       
       <div className="grid grid-cols-7 gap-1 mb-2">
         {weekDays.map(day => (

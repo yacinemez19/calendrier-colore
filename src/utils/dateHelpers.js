@@ -1,6 +1,11 @@
 // Date helper functions for the agenda application
 
 export const MONTHS = {
+  1: { name: 'Janvier', year: 2026 },
+  2: { name: 'Février', year: 2026 },
+  3: { name: 'Mars', year: 2026 },
+  4: { name: 'Avril', year: 2026 },
+  5: { name: 'Mai', year: 2026 },
   9: { name: 'Septembre', year: 2025 },
   10: { name: 'Octobre', year: 2025 },
   11: { name: 'Novembre', year: 2025 },
