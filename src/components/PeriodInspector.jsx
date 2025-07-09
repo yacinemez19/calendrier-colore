@@ -154,8 +154,13 @@ const PeriodInspector = ({ selectedPeriod, onUpdatePeriod, onClearSelection, sel
           </svg>
           <h4 className="mt-2 text-sm font-medium text-gray-900">Aucune période sélectionnée</h4>
           <p className="mt-1 text-sm text-gray-500">
-            Cliquez sur une période dans la liste pour voir ses détails.
+           .
           </p>
+          <img
+            src="/anatole.png"
+            alt="image"
+            className="block mx-auto w-50 h-50 object-cover rounded-lg shadow-lg border border-gray-200 bg-white hover:scale-105 transition-transform duration-300"
+          />
         </div>
       </div>
     );
