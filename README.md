@@ -60,28 +60,3 @@ Les périodes sont stockées avec la structure suivante :
   jours: ['2025-10-19', '2025-10-20', ..., '2025-11-04']
 }
 ```
-
-## 🔧 Scripts disponibles
-
-- `npm start` : Démarre le serveur de développement
-- `npm test` : Lance les tests
-- `npm run build` : Génère la version de production
-- `npm run eject` : Éjecte la configuration (non recommandé)
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
----
-
-Fait avec ❤️ pour une meilleure organisation du temps
